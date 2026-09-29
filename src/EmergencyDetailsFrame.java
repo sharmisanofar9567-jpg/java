@@ -26,6 +26,7 @@ public class EmergencyDetailsFrame {
 
         JTextField idField = new JTextField("ER001");
         idField.setBounds(170, 90, 250, 25);
+        idField.setEditable(false);
         frame.add(idField);
 
 
@@ -36,6 +37,7 @@ public class EmergencyDetailsFrame {
 
         JTextField typeField = new JTextField("Medical Emergency");
         typeField.setBounds(170, 135, 250, 25);
+        typeField.setEditable(false);
         frame.add(typeField);
 
 
@@ -46,6 +48,7 @@ public class EmergencyDetailsFrame {
 
         JTextField priorityField = new JTextField("Critical");
         priorityField.setBounds(170, 180, 250, 25);
+        priorityField.setEditable(false);
         frame.add(priorityField);
 
 
@@ -56,6 +59,7 @@ public class EmergencyDetailsFrame {
 
         JTextField peopleField = new JTextField("3");
         peopleField.setBounds(170, 225, 250, 25);
+        peopleField.setEditable(false);
         frame.add(peopleField);
 
 
@@ -66,6 +70,7 @@ public class EmergencyDetailsFrame {
 
         JTextField photoField = new JTextField("Attached");
         photoField.setBounds(170, 270, 250, 25);
+        photoField.setEditable(false);
         frame.add(photoField);
 
 
@@ -76,13 +81,8 @@ public class EmergencyDetailsFrame {
 
         JTextField serviceField = new JTextField("Ambulance");
         serviceField.setBounds(170, 315, 250, 25);
+        serviceField.setEditable(false);
         frame.add(serviceField);
-
-
-        // View Report Button
-        JButton viewButton = new JButton("View Report");
-        viewButton.setBounds(170, 380, 150, 35);
-        frame.add(viewButton);
 
 
         // Show Frame
