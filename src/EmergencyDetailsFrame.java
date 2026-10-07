@@ -1,59 +1,77 @@
 package src;
+import java.awt.*;
 import javax.swing.*;
 
 public class EmergencyDetailsFrame {
 
     public static void main(String[] args) {
 
-        // Create Frame
         JFrame frame = new JFrame("RESQ - Emergency Details");
 
-        frame.setSize(500, 500);
+        frame.setSize(600, 450);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(null);
 
+        frame.setLayout(new GridLayout(7, 2, 10, 10));
 
         // Title
-        JLabel titleLabel = new JLabel("Emergency Details");
-        titleLabel.setBounds(170, 30, 200, 30);
-        frame.add(titleLabel);
+        JLabel title = new JLabel("Emergency Details");
 
+        frame.add(title);
+        frame.add(new JLabel(""));
 
         // Emergency ID
-        JLabel idLabel = new JLabel("Emergency ID: ER001");
-        idLabel.setBounds(40, 90, 300, 25);
-        frame.add(idLabel);
+        JLabel idLabel = new JLabel("Emergency ID:");
+        JLabel idValue = new JLabel("ER001");
 
+        frame.add(idLabel);
+        frame.add(idValue);
 
         // Emergency Type
-        JLabel typeLabel = new JLabel("Emergency Type: Medical Emergency");
-        typeLabel.setBounds(40, 135, 350, 25);
-        frame.add(typeLabel);
+        JLabel typeLabel = new JLabel("Emergency Type:");
+        JLabel typeValue = new JLabel("Fire Incident");
 
+        frame.add(typeLabel);
+        frame.add(typeValue);
 
         // Severity / Priority
-        JLabel priorityLabel = new JLabel("Severity / Priority: Critical");
-        priorityLabel.setBounds(40, 180, 350, 25);
-        frame.add(priorityLabel);
+        JLabel priorityLabel =
+                new JLabel("Severity / Priority:");
 
+        JLabel priorityValue =
+                new JLabel("Critical");
+
+        frame.add(priorityLabel);
+        frame.add(priorityValue);
 
         // People Affected
-        JLabel peopleLabel = new JLabel("People Affected: 3");
-        peopleLabel.setBounds(40, 225, 300, 25);
-        frame.add(peopleLabel);
+        JLabel peopleLabel =
+                new JLabel("People Affected:");
 
+        JLabel peopleValue =
+                new JLabel("5");
+
+        frame.add(peopleLabel);
+        frame.add(peopleValue);
 
         // Photo / Evidence
-        JLabel photoLabel = new JLabel("Photo / Evidence: Attached");
-        photoLabel.setBounds(40, 270, 350, 25);
-        frame.add(photoLabel);
+        JLabel photoLabel =
+                new JLabel("Photo / Evidence:");
 
+        JLabel photoValue =
+                new JLabel("fire.jpg");
+
+        frame.add(photoLabel);
+        frame.add(photoValue);
 
         // Emergency Service
-        JLabel serviceLabel = new JLabel("Emergency Service: Ambulance");
-        serviceLabel.setBounds(40, 315, 350, 25);
-        frame.add(serviceLabel);
+        JLabel serviceLabel =
+                new JLabel("Emergency Service:");
 
+        JLabel serviceValue =
+                new JLabel("Fire Force");
+
+        frame.add(serviceLabel);
+        frame.add(serviceValue);
 
         // Show Frame
         frame.setVisible(true);
