@@ -1,41 +1,31 @@
-package RESQ;  // ✅ Added package declaration
+package RESQ;  // ✅ Must match folder name RESQ
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ResourceAllocation extends JFrame {
 
-    JLabel emergencyLabel;
-    JLabel resourceLabel;
-    JLabel availableLabel;
-    JLabel allocateLabel;
-    JLabel priorityLabel;
-    JLabel locationLabel;
-    JLabel detailsLabel;
-
-    JTextField emergencyField;
-    JTextField availableField;
-    JTextField allocateField;
-    JTextField locationField;
-
-    JComboBox<String> resourceBox;
-    JComboBox<String> priorityBox;
-
-    JTextArea detailsArea;
-
-    JButton allocateButton;
-    JButton clearButton;
+    // Labels
+    JLabel emergencyLabel, resourceLabel, availableLabel, allocateLabel, priorityLabel, locationLabel;
+    // Text fields
+    JTextField emergencyField, availableField, allocateField, locationField;
+    // Combo boxes
+    JComboBox<String> resourceBox, priorityBox;
+    // Buttons
+    JButton allocateButton, clearButton;
 
     public ResourceAllocation() {
-
+        // Window setup
         setTitle("RESQ - Resource Allocation");
-        setSize(600, 650);
+        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(9, 2, 10, 15));
-        panel.setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
+        // Main panel with BorderLayout
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+
+        // Form panel with GridLayout (rows × columns)
+        JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
 
         // Emergency ID
         emergencyLabel = new JLabel("Emergency ID:");
@@ -43,13 +33,12 @@ public class ResourceAllocation extends JFrame {
 
         // Resource Type
         resourceLabel = new JLabel("Resource Type:");
-        String[] resources = {"Police", "Fire Force", "Ambulance", "Medical Kit"};
-        resourceBox = new JComboBox<>(resources);
+        resourceBox = new JComboBox<>(new String[]{"Police", "Fire Force", "Ambulance", "Medical Kit"});
 
         // Available Quantity
         availableLabel = new JLabel("Available Quantity:");
         availableField = new JTextField("5");
-        availableField.setEditable(false);
+        availableField.setEditable(false); // cannot edit
 
         // Allocate Quantity
         allocateLabel = new JLabel("Allocate Quantity:");
@@ -57,42 +46,33 @@ public class ResourceAllocation extends JFrame {
 
         // Priority
         priorityLabel = new JLabel("Priority:");
-        String[] priorities = {"Normal", "High", "Severe", "Extreme"};
-        priorityBox = new JComboBox<>(priorities);
+        priorityBox = new JComboBox<>(new String[]{"Normal", "High", "Severe", "Extreme"});
 
         // Location
         locationLabel = new JLabel("Location:");
         locationField = new JTextField("Kollam");
 
-        // Buttons
+        // Add all fields to form panel
+        formPanel.add(emergencyLabel); formPanel.add(emergencyField);
+        formPanel.add(resourceLabel); formPanel.add(resourceBox);
+        formPanel.add(availableLabel); formPanel.add(availableField);
+        formPanel.add(allocateLabel); formPanel.add(allocateField);
+        formPanel.add(priorityLabel); formPanel.add(priorityBox);
+        formPanel.add(locationLabel); formPanel.add(locationField);
+
+        // Buttons panel with FlowLayout
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         allocateButton = new JButton("Allocate");
         clearButton = new JButton("Clear");
+        buttonPanel.add(allocateButton);
+        buttonPanel.add(clearButton);
 
-        // Allocation Details
-        detailsLabel = new JLabel("Allocation Details:");
-        detailsArea = new JTextArea(
-            "Emergency ID : E001\n" +
-            "Resource     : Police\n" +
-            "Quantity     : 2\n" +
-            "Priority     : Severe\n" +
-            "Location     : Kollam"
-        );
-        detailsArea.setEditable(false);
+        // Add panels to main layout
+        mainPanel.add(formPanel, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Add components
-        panel.add(emergencyLabel); panel.add(emergencyField);
-        panel.add(resourceLabel); panel.add(resourceBox);
-        panel.add(availableLabel); panel.add(availableField);
-        panel.add(allocateLabel); panel.add(allocateField);
-        panel.add(priorityLabel); panel.add(priorityBox);
-        panel.add(locationLabel); panel.add(locationField);
-        panel.add(allocateButton); panel.add(clearButton);
-        panel.add(detailsLabel); panel.add(detailsArea);
-
-        add(panel);
-
-        // No ActionListener is used.
-        // Buttons are only GUI components.
+        // Add main panel to frame
+        add(mainPanel);
     }
 
     public static void main(String[] args) {
