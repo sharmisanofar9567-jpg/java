@@ -65,7 +65,6 @@ public class IncidentHistoryFrame {
 
         // Frame Size
         frame.setSize(700, 450);
-        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }
