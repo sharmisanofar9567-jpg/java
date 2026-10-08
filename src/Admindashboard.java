@@ -177,6 +177,7 @@ public class Admindashboard {
         );
 
         logoutPanel.add(new JButton("Logout"));
+        
 
         frame.add(logoutPanel, BorderLayout.SOUTH);
 
