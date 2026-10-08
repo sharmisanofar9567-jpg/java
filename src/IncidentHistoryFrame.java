@@ -1,4 +1,5 @@
 
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,7 +9,7 @@ public class IncidentHistoryFrame {
 
         JFrame frame = new JFrame("RESQ - Incident History");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout(10, 10));
+        frame.setLayout(new BorderLayout());
 
         // Main Panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
@@ -19,7 +20,7 @@ public class IncidentHistoryFrame {
         mainPanel.add(heading, BorderLayout.NORTH);
 
         // Search Panel
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         searchPanel.add(new JLabel("Search By Date:"));
         searchPanel.add(new JTextField(10));
         searchPanel.add(new JButton("Search"));
@@ -35,7 +36,8 @@ public class IncidentHistoryFrame {
         };
 
         JTable table = new JTable(data, columns);
-
+       
+      
 
         JScrollPane tableScroll = new JScrollPane(table);
         mainPanel.add(tableScroll, BorderLayout.CENTER);
@@ -63,7 +65,7 @@ public class IncidentHistoryFrame {
 
         // Frame Size
         frame.setSize(700, 450);
-       
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }
