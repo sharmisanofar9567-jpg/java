@@ -1,85 +1,70 @@
+
+
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
+import java.awt.*;
 
 public class IncidentHistoryFrame {
 
     public static void main(String[] args) {
 
-        JFrame frame = new JFrame("RESQ - My Incident History");
-        frame.setSize(700, 550);
-        frame.setLayout(null);
+        JFrame frame = new JFrame("RESQ - Incident History");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
 
-        JLabel title = new JLabel(" Incident History");
-        title.setBounds(200, 20, 300, 30);
-        frame.add(title);
+        // Main Panel with BorderLayout
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
 
-        JLabel searchLabel = new JLabel("Search By Date:");
-        searchLabel.setBounds(50, 70, 120, 30);
-        frame.add(searchLabel);
+        // Heading
+        JLabel heading = new JLabel("Incident History", JLabel.CENTER);
+       
+        mainPanel.add(heading, BorderLayout.NORTH);
 
-        JTextField dateField = new JTextField();
-        dateField.setBounds(170, 70, 180, 30);
-        frame.add(dateField);
+        // Search Panel
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        searchPanel.add(new JLabel("Search By Date:"));
+        searchPanel.add(new JTextField(10));
+        searchPanel.add(new JButton("Search"));
+        mainPanel.add(searchPanel, BorderLayout.NORTH);
 
-        JButton searchButton = new JButton("Search");
-        searchButton.setBounds(370, 70, 100, 30);
-        frame.add(searchButton);
-
-        JLabel historyLabel = new JLabel("Incident History");
-        historyLabel.setBounds(50, 120, 150, 30);
-        frame.add(historyLabel);
-
-        String[] columns = {
-            "Emergency ID",
-            "Emergency Type",
-            "Date",
-            "Outcome",
-            "Status"
-        };
-
+        // Table Data
+        String[] columns = {"Emergency ID", "Emergency Type", "Date", "Outcome", "Status"};
         String[][] data = {
-            {"E001", "Medical", "28-09-2026",
-             "Assistance Provided", "Resolved"},
-
-            {"E002", "Accident", "25-09-2026",
-             "First Aid Provided", "Pending"}
+                {"E001", "Medical", "28-09-2026", "Assistance Provided", "Resolved"},
+                {"E002", "Accident", "25-09-2026", "First Aid Provided", "Pending"},
+                {"E003", "Fire", "20-09-2026", "Rescue Operation", "Unresolved"},
+                {"E004", "Flood", "15-09-2026", "Evacuation Done", "Resolved"}
         };
 
         JTable table = new JTable(data, columns);
+       
+      
 
-        JTableHeader header = table.getTableHeader();
+        JScrollPane tableScroll = new JScrollPane(table);
+        mainPanel.add(tableScroll, BorderLayout.CENTER);
 
-        header.setBounds(50, 155, 580, 30);
-        table.setBounds(50, 185, 580, 70);
+        // Overall Incident Summary
+        JPanel summaryPanel = new JPanel(new GridLayout(1, 4, 10, 10));
+        summaryPanel.add(new JLabel("Total Incidents: 4", JLabel.CENTER));
+        summaryPanel.add(new JLabel("Resolved: 2", JLabel.CENTER));
+        summaryPanel.add(new JLabel("Pending: 1", JLabel.CENTER));
+        summaryPanel.add(new JLabel("Unresolved: 1", JLabel.CENTER));
 
-        frame.add(header);
-        frame.add(table);
+        JPanel summaryContainer = new JPanel(new BorderLayout());
+        summaryContainer.add(new JLabel("Overall Incident Summary", JLabel.CENTER), BorderLayout.NORTH);
+        summaryContainer.add(summaryPanel, BorderLayout.CENTER);
 
-        JLabel summaryLabel = new JLabel("Overall Incident Summary");
-        summaryLabel.setBounds(50, 290, 200, 30);
-        frame.add(summaryLabel);
+        mainPanel.add(summaryContainer, BorderLayout.SOUTH);
 
-        JLabel totalLabel = new JLabel("Total Incidents: 4");
-        totalLabel.setBounds(50, 330, 150, 30);
-        frame.add(totalLabel);
+        // Back Button
+        JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        backPanel.add(new JButton("Back"));
+        frame.add(backPanel, BorderLayout.SOUTH);
 
-        JLabel resolvedLabel = new JLabel("Resolved: 2");
-        resolvedLabel.setBounds(220, 330, 120, 30);
-        frame.add(resolvedLabel);
+        // Add Main Panel
+        frame.add(mainPanel, BorderLayout.CENTER);
 
-        JLabel pendingLabel = new JLabel("Pending: 1");
-        pendingLabel.setBounds(350, 330, 120, 30);
-        frame.add(pendingLabel);
-
-        JLabel unresolvedLabel = new JLabel("Unresolved: 1");
-        unresolvedLabel.setBounds(480, 330, 120, 30);
-        frame.add(unresolvedLabel);
-
-        JButton backButton = new JButton("Back");
-        backButton.setBounds(280, 400, 100, 30);
-        frame.add(backButton);
-
+        // Frame Size
+        frame.setSize(700, 450);
         frame.setVisible(true);
     }
 }
