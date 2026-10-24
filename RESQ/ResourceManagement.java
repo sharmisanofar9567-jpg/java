@@ -2,6 +2,7 @@ package RESQ;  // ✅ Matches folder name RESQ
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 
 public class ResourceManagement extends JFrame {
 
@@ -16,12 +17,22 @@ public class ResourceManagement extends JFrame {
     // Panel for resource details
     JPanel detailsPanel;
 
+    // Store resource data dynamically
+    HashMap<String, int[]> resourceData;
+
     public ResourceManagement() {
         // Frame setup
         setTitle("RESQ - Resource Management");
         setSize(600, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        // Initialize resource data (Total, Available)
+        resourceData = new HashMap<>();
+        resourceData.put("Police", new int[]{5, 3});
+        resourceData.put("Fire Force", new int[]{2, 1});
+        resourceData.put("Ambulance", new int[]{3, 2});
+        resourceData.put("Medical Kit", new int[]{20, 15});
 
         // Main panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout(15, 15));
@@ -73,11 +84,8 @@ public class ResourceManagement extends JFrame {
         detailsPanel.add(new JLabel("Total Resources"));
         detailsPanel.add(new JLabel("Currently Available"));
 
-        // Resource rows
-        detailsPanel.add(new JLabel("Police")); detailsPanel.add(new JLabel("5")); detailsPanel.add(new JLabel("3"));
-        detailsPanel.add(new JLabel("Fire Force")); detailsPanel.add(new JLabel("2")); detailsPanel.add(new JLabel("1"));
-        detailsPanel.add(new JLabel("Ambulance")); detailsPanel.add(new JLabel("3")); detailsPanel.add(new JLabel("2"));
-        detailsPanel.add(new JLabel("Medical Kit")); detailsPanel.add(new JLabel("20")); detailsPanel.add(new JLabel("15"));
+        // Fill initial resource data
+        refreshDetailsPanel();
 
         bottomPanel.add(detailsPanel, BorderLayout.CENTER);
         centerPanel.add(bottomPanel, BorderLayout.SOUTH);
@@ -87,6 +95,58 @@ public class ResourceManagement extends JFrame {
 
         // Add everything to frame
         add(mainPanel);
+
+        // ✅ Event Handling
+        updateResourceButton.addActionListener(e -> {
+            try {
+                String resource = (String) resourceTypeBox.getSelectedItem();
+                int total = Integer.parseInt(totalResourceField.getText());
+                int available = Integer.parseInt(availableResourceField.getText());
+
+                if (available > total) {
+                    JOptionPane.showMessageDialog(this,
+                            "Available resources cannot exceed total!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Update resource data
+                resourceData.put(resource, new int[]{total, available});
+
+                // Refresh details panel
+                refreshDetailsPanel();
+
+                JOptionPane.showMessageDialog(this,
+                        resource + " updated!\nTotal: " + total + "\nAvailable: " + available,
+                        "Update Successful", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Please enter valid numbers for resources.",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
+
+    // Method to refresh the details panel dynamically
+    private void refreshDetailsPanel() {
+        detailsPanel.removeAll();
+
+        // Table headings
+        detailsPanel.add(new JLabel("Resource Type"));
+        detailsPanel.add(new JLabel("Total Resources"));
+        detailsPanel.add(new JLabel("Currently Available"));
+
+        // Add updated resource rows
+        for (String key : resourceData.keySet()) {
+            detailsPanel.add(new JLabel(key));
+            detailsPanel.add(new JLabel(String.valueOf(resourceData.get(key)[0])));
+            detailsPanel.add(new JLabel(String.valueOf(resourceData.get(key)[1])));
+        }
+
+        // Refresh UI
+        detailsPanel.revalidate();
+        detailsPanel.repaint();
     }
 
     public static void main(String[] args) {
