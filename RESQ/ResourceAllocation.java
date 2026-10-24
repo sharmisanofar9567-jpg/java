@@ -73,6 +73,47 @@ public class ResourceAllocation extends JFrame {
 
         // Add main panel to frame
         add(mainPanel);
+
+        // ✅ Event Handling
+
+        // Allocate button logic
+        allocateButton.addActionListener(e -> {
+            try {
+                int available = Integer.parseInt(availableField.getText());
+                int allocate = Integer.parseInt(allocateField.getText());
+
+                if (allocate <= available && allocate > 0) {
+                    availableField.setText(String.valueOf(available - allocate));
+                    JOptionPane.showMessageDialog(this,
+                            "Resources allocated successfully!\n" +
+                            "Emergency ID: " + emergencyField.getText() +
+                            "\nResource: " + resourceBox.getSelectedItem() +
+                            "\nQuantity: " + allocate +
+                            "\nPriority: " + priorityBox.getSelectedItem() +
+                            "\nLocation: " + locationField.getText()
+                    );
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Invalid allocation! Not enough resources available.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Please enter a valid number for allocation.",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        // Clear button logic
+        clearButton.addActionListener(e -> {
+            emergencyField.setText("");
+            allocateField.setText("");
+            locationField.setText("");
+            resourceBox.setSelectedIndex(0);
+            priorityBox.setSelectedIndex(0);
+            availableField.setText("5"); // reset to default
+            JOptionPane.showMessageDialog(this, "Form cleared!");
+        });
     }
 
     public static void main(String[] args) {
