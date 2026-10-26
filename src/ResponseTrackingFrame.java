@@ -56,16 +56,16 @@ public class ResponseTrackingFrame {
         );
 
         JLabel typeLabel = new JLabel("Emergency Type:");
-        JLabel typeValue = new JLabel("Medical");
+        JLabel typeValue = new JLabel("-");
 
         JLabel locationLabel = new JLabel("Location:");
-        JLabel locationValue = new JLabel("Kollam");
+        JLabel locationValue = new JLabel("-");
 
         JLabel priorityLabel = new JLabel("Priority:");
-        JLabel priorityValue = new JLabel("HIGH");
+        JLabel priorityValue = new JLabel("-");
 
         JLabel timeLabel = new JLabel("Reported Time:");
-        JLabel timeValue = new JLabel("10:30 AM");
+        JLabel timeValue = new JLabel("-");
 
         emergencyPanel.add(typeLabel);
         emergencyPanel.add(typeValue);
@@ -79,7 +79,9 @@ public class ResponseTrackingFrame {
         emergencyPanel.add(timeLabel);
         emergencyPanel.add(timeValue);
 
+        
         mainPanel.add(emergencyPanel);
+        
 
 
         // Assigned Resource
@@ -93,17 +95,22 @@ public class ResponseTrackingFrame {
         );
 
         JLabel resourceLabel = new JLabel("Resource:");
-        JLabel resourceValue = new JLabel("Ambulance AMB-102");
+        JLabel resourceValue = new JLabel("-");
 
         JLabel teamLabel = new JLabel("Team:");
-        JLabel teamValue = new JLabel("Medical Team");
+        JLabel teamValue = new JLabel("-");
 
         resourcePanel.add(resourceLabel);
         resourcePanel.add(resourceValue);
 
         resourcePanel.add(teamLabel);
         resourcePanel.add(teamValue);
-
+        
+        
+      
+        
+        
+        
         mainPanel.add(resourcePanel);
 
 
@@ -113,11 +120,13 @@ public class ResponseTrackingFrame {
                 new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         JLabel statusLabel = new JLabel("Current Status:");
-        JLabel statusValue = new JLabel("Dispatched");
+        JLabel statusValue = new JLabel("-");
 
         statusPanel.add(statusLabel);
         statusPanel.add(statusValue);
 
+        
+        
         mainPanel.add(statusPanel);
 
 
@@ -130,9 +139,7 @@ public class ResponseTrackingFrame {
 
         JTextArea detailsArea = new JTextArea(3, 35);
 
-        detailsArea.setText(
-                "Medical team has been dispatched to the location."
-        );
+        detailsArea.setText("");
 
         detailsArea.setEditable(false);
         detailsArea.setLineWrap(true);
@@ -141,12 +148,52 @@ public class ResponseTrackingFrame {
         detailsPanel.add(detailsLabel);
         detailsPanel.add(detailsArea);
 
+        
+       
         mainPanel.add(detailsPanel);
+       
+        
 
 
         frame.add(mainPanel, BorderLayout.CENTER);
 
+        trackButton.addActionListener(e -> {
 
+            String id = idField.getText();
+
+            if (id.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                    frame, "Please enter Emergency ID"
+                );
+            }
+            else if (id.equals("E001")) {
+
+                typeValue.setText("Medical");
+                locationValue.setText("Kollam");
+                priorityValue.setText("HIGH");
+                timeValue.setText("10:30 AM");
+
+                resourceValue.setText("Ambulance AMB-102");
+                teamValue.setText("Medical Team");
+                statusValue.setText("Dispatched");
+
+                detailsArea.setText(
+                    "Medical team has been dispatched to the location."
+                );
+
+                emergencyPanel.setVisible(true);
+                resourcePanel.setVisible(true);
+                statusPanel.setVisible(true);
+                detailsPanel.setVisible(true);
+
+                
+            }
+            else {
+                JOptionPane.showMessageDialog(
+                    frame, "Emergency ID not found"
+                );
+            }
+        });
         // Buttons
 
         JPanel buttonPanel =
@@ -157,6 +204,20 @@ public class ResponseTrackingFrame {
 
         buttonPanel.add(refreshButton);
         buttonPanel.add(backButton);
+        refreshButton.addActionListener(e -> {
+            idField.setText("");
+
+            typeValue.setText("-");
+            locationValue.setText("-");
+            priorityValue.setText("-");
+            timeValue.setText("-");
+
+            resourceValue.setText("-");
+            teamValue.setText("-");
+            statusValue.setText("-");
+
+            detailsArea.setText("");
+        });
 
         frame.add(buttonPanel, BorderLayout.SOUTH);
 
