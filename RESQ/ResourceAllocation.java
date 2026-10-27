@@ -23,6 +23,8 @@ public class ResourceAllocation extends JFrame {
 
         // Main panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        // ✅ Add padding around the panel (top, left, bottom, right)
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         // Form panel with GridLayout (rows × columns)
         JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
