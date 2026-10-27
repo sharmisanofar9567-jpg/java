@@ -158,42 +158,45 @@ public class ResponseTrackingFrame {
         frame.add(mainPanel, BorderLayout.CENTER);
 
         trackButton.addActionListener(e -> {
+    try {
+        String id = idField.getText();
 
-            String id = idField.getText();
-
-            if (id.isEmpty()) {
-                JOptionPane.showMessageDialog(
-                    frame, "Please enter Emergency ID"
-                );
-            }
-            else if (id.equals("E001")) {
-
-                typeValue.setText("Medical");
-                locationValue.setText("Kollam");
-                priorityValue.setText("HIGH");
-                timeValue.setText("10:30 AM");
-
-                resourceValue.setText("Ambulance AMB-102");
-                teamValue.setText("Medical Team");
-                statusValue.setText("Dispatched");
-
-                detailsArea.setText(
-                    "Medical team has been dispatched to the location."
-                );
-
-                emergencyPanel.setVisible(true);
-                resourcePanel.setVisible(true);
-                statusPanel.setVisible(true);
-                detailsPanel.setVisible(true);
-
-                
-            }
-            else {
-                JOptionPane.showMessageDialog(
-                    frame, "Emergency ID not found"
-                );
-            }
-        });
+        if (id.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                frame, "Please enter Emergency ID"
+            );
+            return;
+        }
+        else if (id.equals("E001")) {
+            typeValue.setText("Medical");
+            locationValue.setText("Kollam");
+            priorityValue.setText("HIGH");
+            timeValue.setText("10:30 AM");
+            resourceValue.setText("Ambulance AMB-102");
+            teamValue.setText("Medical Team");
+            statusValue.setText("Dispatched");
+            detailsArea.setText(
+                "Medical team has been dispatched to the location."
+            );
+            emergencyPanel.setVisible(true);
+            resourcePanel.setVisible(true);
+            statusPanel.setVisible(true);
+            detailsPanel.setVisible(true);
+        }
+        else {
+            JOptionPane.showMessageDialog(
+                frame, "Emergency ID not found"
+            );
+        }
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(
+            frame,
+            "An error occurred while tracking the emergency.",
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+        );
+    }
+});
         // Buttons
 
         JPanel buttonPanel =
