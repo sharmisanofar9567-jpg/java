@@ -1,109 +1,293 @@
 package src;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class IncidentHistoryFrame {
+public class IncidentHistoryFrame extends JFrame {
 
-    public static void main(String[] args) {
+    JTextField searchField;
+    JLabel idLabel, typeLabel, locationLabel, resourceLabel;
+    JComboBox<String> statusBox;
+    JButton updateButton;
+    Emergency selectedEmergency;
 
-        JFrame frame = new JFrame("RESQ - Incident History");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
+    Color blue = new Color(25, 100, 190);
+    Color lightGrey = new Color(245, 247, 250);
+    Color darkText = new Color(45, 55, 70);
 
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+    public IncidentHistoryFrame() {
+
+        setTitle("RESCUE - Incident History");
+        setSize(750, 680);
+        setMinimumSize(new Dimension(600, 600));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Main panel
+        JPanel main = new JPanel(new BorderLayout(15, 18));
+        main.setBackground(Color.WHITE);
+        main.setBorder(new EmptyBorder(20, 22, 20, 22));
 
         // Heading
-        JLabel heading = new JLabel("Incident History", JLabel.CENTER);
-        mainPanel.add(heading, BorderLayout.NORTH);
+        JPanel heading = new JPanel();
+        heading.setLayout(new BoxLayout(heading, BoxLayout.Y_AXIS));
+        heading.setBackground(Color.WHITE);
 
-        // Search Panel - Search By ID
-        JPanel searchPanel = new JPanel(
-                new FlowLayout(FlowLayout.CENTER, 5, 5));
+        JLabel title = new JLabel("Incident History & Status Management");
+        title.setFont(new Font("Arial", Font.BOLD, 23));
+        title.setForeground(darkText);
 
-        JTextField searchField = new JTextField(10);
+        JLabel subtitle = new JLabel("Admin View");
+        subtitle.setFont(new Font("Arial", Font.PLAIN, 14));
+        subtitle.setForeground(Color.GRAY);
+
+        heading.add(title);
+        heading.add(Box.createVerticalStrut(8));
+        heading.add(subtitle);
+
+        // Search section
+        JPanel searchSection = new JPanel(new BorderLayout(8, 8));
+        searchSection.setBackground(Color.WHITE);
+
+        JLabel searchTitle = new JLabel("Search by Incident ID");
+        searchTitle.setFont(new Font("Arial", Font.PLAIN, 15));
+
+        searchField = new JTextField();
+        searchField.setFont(new Font("Arial", Font.PLAIN, 16));
+        searchField.setPreferredSize(new Dimension(100, 42));
+
         JButton searchButton = new JButton("Search");
-        JButton showAllButton = new JButton("Show All");
+        searchButton.setPreferredSize(new Dimension(100, 42));
+        searchButton.addActionListener(e -> searchIncident());
 
-        searchPanel.add(new JLabel("Search By ID:"));
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
-        searchPanel.add(showAllButton);
+        JPanel searchRow = new JPanel(new BorderLayout(10, 0));
+        searchRow.setBackground(Color.WHITE);
+        searchRow.add(searchField, BorderLayout.CENTER);
+        searchRow.add(searchButton, BorderLayout.EAST);
 
-        mainPanel.add(searchPanel, BorderLayout.NORTH);
+        searchSection.add(searchTitle, BorderLayout.NORTH);
+        searchSection.add(searchRow, BorderLayout.CENTER);
 
-        // Table Data - Date Column Removed
-        String[] columns = {
-                "Emergency ID", "Emergency Type", "Outcome", "Status"
+        // Incident details
+        JPanel details = new JPanel(new GridLayout(4, 2, 10, 18));
+        details.setBackground(lightGrey);
+        details.setBorder(new EmptyBorder(20, 18, 20, 18));
+
+        idLabel = new JLabel("-");
+        typeLabel = new JLabel("-");
+        locationLabel = new JLabel("-");
+        resourceLabel = new JLabel("-");
+
+        details.add(createDetailTitle("Incident ID"));
+        details.add(idLabel);
+
+        details.add(createDetailTitle("Incident Type"));
+        details.add(typeLabel);
+
+        details.add(createDetailTitle("Location"));
+        details.add(locationLabel);
+
+        details.add(createDetailTitle("Assigned Resource"));
+        details.add(resourceLabel);
+
+        // Status section
+        JPanel statusPanel = new JPanel();
+        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
+        statusPanel.setBackground(lightGrey);
+        statusPanel.setBorder(new EmptyBorder(15, 18, 18, 18));
+
+        JLabel statusTitle = new JLabel("Update Status");
+        statusTitle.setForeground(Color.GRAY);
+
+        String[] statuses = {
+            "Reported",
+            "Pending",
+            "Resources Allocated",
+            "Active",
+            "Resolved"
         };
 
-        Object[][] data = {
-                {"E001", "Medical", "Assistance Provided", "Resolved"},
-                {"E002", "Accident", "First Aid Provided", "Pending"},
-                {"E003", "Fire", "Rescue Operation", "Unresolved"},
-                {"E004", "Flood", "Evacuation Done", "Resolved"}
-        };
+        statusBox = new JComboBox<String>(statuses);
+        statusBox.setFont(new Font("Arial", Font.PLAIN, 15));
+        statusBox.setSelectedIndex(0);
+        statusBox.setEditable(false);
+        statusBox.setMaximumRowCount(5);
+        statusBox.setBackground(Color.WHITE);
+        statusBox.setForeground(Color.BLACK);
+        statusBox.setPreferredSize(new Dimension(400, 42));
+        statusBox.setMaximumSize(new Dimension(400, 42));
+        statusBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+        statusBox.setEnabled(false);
 
-        DefaultTableModel model = new DefaultTableModel(data, columns);
-        JTable table = new JTable(model);
+        // Dropdown values display
+        statusBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list, Object value, int index,
+                    boolean isSelected, boolean cellHasFocus) {
 
-        JScrollPane tableScroll = new JScrollPane(table);
-        mainPanel.add(tableScroll, BorderLayout.CENTER);
+                JLabel label = (JLabel) super.getListCellRendererComponent(
+                        list, value, index, isSelected, cellHasFocus);
 
-        // Search by ID
-        searchButton.addActionListener(e -> {
+                label.setOpaque(true);
+                label.setBackground(
+                        isSelected ? blue : Color.WHITE);
+                label.setForeground(
+                        isSelected ? Color.WHITE : Color.BLACK);
+                label.setBorder(
+                        BorderFactory.createEmptyBorder(5, 8, 5, 8));
 
-            String id = searchField.getText().trim();
-            boolean found = false;
-
-            model.setRowCount(0);
-
-            for (Object[] incident : data) {
-                if (incident[0].toString().equalsIgnoreCase(id)) {
-                    model.addRow(incident);
-                    found = true;
-                }
-            }
-
-            if (!found) {
-                JOptionPane.showMessageDialog(
-                        frame, "Incident ID Not Found!");
+                return label;
             }
         });
 
-        // Show All Incidents
-        showAllButton.addActionListener(e -> {
-            model.setRowCount(0);
+        updateButton = new JButton("Update Status");
+        updateButton.setBackground(blue);
+        updateButton.setForeground(Color.WHITE);
+        updateButton.setFocusPainted(false);
+        updateButton.setMaximumSize(new Dimension(400, 42));
+        updateButton.setPreferredSize(new Dimension(400, 42));
+        updateButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        updateButton.setEnabled(false);
+        updateButton.addActionListener(e -> updateStatus());
 
-            for (Object[] incident : data) {
-                model.addRow(incident);
-            }
-        });
+        statusPanel.add(statusTitle);
+        statusPanel.add(Box.createVerticalStrut(10));
+        statusPanel.add(statusBox);
+        statusPanel.add(Box.createVerticalStrut(12));
+        statusPanel.add(updateButton);
 
-        // Overall Incident Summary
-        JPanel summaryPanel = new JPanel(new GridLayout(1, 4, 10, 10));
-        summaryPanel.add(new JLabel("Total Incidents: 4", JLabel.CENTER));
-        summaryPanel.add(new JLabel("Resolved: 2", JLabel.CENTER));
-        summaryPanel.add(new JLabel("Pending: 1", JLabel.CENTER));
-        summaryPanel.add(new JLabel("Unresolved: 1", JLabel.CENTER));
+        // Details card
+        JPanel detailsCard = new JPanel(new BorderLayout());
+        detailsCard.setBackground(lightGrey);
+        detailsCard.setBorder(
+                new LineBorder(new Color(225, 228, 233), 1, true));
 
-        JPanel summaryContainer = new JPanel(new BorderLayout());
-        summaryContainer.add(
-                new JLabel("Overall Incident Summary", JLabel.CENTER),
-                BorderLayout.NORTH);
-        summaryContainer.add(summaryPanel, BorderLayout.CENTER);
+        detailsCard.add(details, BorderLayout.NORTH);
+        detailsCard.add(statusPanel, BorderLayout.CENTER);
 
-        mainPanel.add(summaryContainer, BorderLayout.SOUTH);
+        // Main content
+        JPanel content = new JPanel(new BorderLayout(0, 18));
+        content.setBackground(Color.WHITE);
+        content.add(searchSection, BorderLayout.NORTH);
+        content.add(detailsCard, BorderLayout.CENTER);
 
-        // Back Button
-        JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        backPanel.add(new JButton("Back"));
-        frame.add(backPanel, BorderLayout.SOUTH);
+        main.add(heading, BorderLayout.NORTH);
+        main.add(content, BorderLayout.CENTER);
 
-        frame.add(mainPanel, BorderLayout.CENTER);
-
-        frame.setSize(700, 450);
-        frame.setVisible(true);
+        setContentPane(main);
     }
-}
+
+    // Create detail title labels
+    JLabel createDetailTitle(String text) {
+
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Arial", Font.PLAIN, 15));
+        label.setForeground(darkText);
+
+        return label;
+    }
+
+    // Search incident by ID
+    void searchIncident() {
+
+        String id = searchField.getText();
+
+        if (id.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this, "Please enter Incident ID.");
+            return;
+        }
+
+        selectedEmergency = Sharedata.findEmergency(id);
+
+        if (selectedEmergency == null) {
+
+            idLabel.setText("-");
+            typeLabel.setText("-");
+            locationLabel.setText("-");
+            resourceLabel.setText("-");
+
+            statusBox.setSelectedIndex(0);
+            statusBox.setEnabled(false);
+            updateButton.setEnabled(false);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Emergency not found. Please check the ID.");
+
+            return;
+        }
+
+        // Emergency details
+        idLabel.setText(selectedEmergency.emergencyID);
+        typeLabel.setText(selectedEmergency.emergencyType);
+        locationLabel.setText(selectedEmergency.location);
+
+        // Assigned resource
+        String[] resource =
+                Resourcedata.findResource(selectedEmergency.emergencyID);
+
+        if (resource != null) {
+            resourceLabel.setText(
+                    resource[1] + " (Quantity: " + resource[2] + ")");
+        } else {
+            resourceLabel.setText("Not allocated");
+        }
+
+        // Set current status in dropdown
+        String currentStatus = selectedEmergency.status;
+
+        if ("In Progress".equalsIgnoreCase(currentStatus)
+                || "Dispatched".equalsIgnoreCase(currentStatus)
+                || "Active".equalsIgnoreCase(currentStatus)) {
+
+            statusBox.setSelectedItem("Active");
+
+        } else if ("Resolved".equalsIgnoreCase(currentStatus)) {
+
+            statusBox.setSelectedItem("Resolved");
+
+        } else if ("Resources Allocated".equalsIgnoreCase(currentStatus)) {
+
+            statusBox.setSelectedItem("Resources Allocated");
+
+        } else if ("Reported".equalsIgnoreCase(currentStatus)) {
+
+            statusBox.setSelectedItem("Reported");
+
+        } else {
+
+            statusBox.setSelectedItem("Pending");
+        }
+
+        statusBox.setEnabled(true);
+        updateButton.setEnabled(true);
+    }
+
+    // Update incident status
+    void updateStatus() {
+
+        if (selectedEmergency == null) {
+            JOptionPane.showMessageDialog(
+                    this, "Please search for an incident first.");
+            return;
+        }
+
+        String newStatus = (String) statusBox.getSelectedItem();
+
+        if (newStatus == null) {
+            return;
+        }
+
+        selectedEmergency.status = newStatus;
+
+        JOptionPane.showMessageDialog(
+                this, "Incident status updated successfully!");
+    }
+
+    public static void main(String[] args) {
+        new IncidentHistoryFrame().setVisible(true);
+    }
