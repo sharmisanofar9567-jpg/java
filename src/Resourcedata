@@ -1,0 +1,94 @@
+package src;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Resourcedata {
+
+    public static ArrayList<String[]> resourceList =
+            new ArrayList<String[]>();
+
+    // Resource type -> [Total, Available]
+    public static HashMap<String, int[]> stockData =
+            new HashMap<String, int[]>();
+
+    static {
+        stockData.put("Police", new int[]{5, 5});
+        stockData.put("Fire Force", new int[]{2, 2});
+        stockData.put("Ambulance", new int[]{3, 3});
+        stockData.put("Medical Kit", new int[]{20, 20});
+    }
+
+    // Save allocated resource for an emergency
+    public static void addResource(
+            String emergencyID, String resourceType, int quantity) {
+
+        for (String[] resource : resourceList) {
+            if (resource[0].equals(emergencyID)) {
+                resource[1] = resourceType;
+                resource[2] = String.valueOf(quantity);
+                return;
+            }
+        }
+
+        resourceList.add(new String[]{
+            emergencyID,
+            resourceType,
+            String.valueOf(quantity)
+        });
+    }
+
+    // Find allocated resource by Emergency ID
+    public static String[] findResource(String emergencyID) {
+
+        for (String[] resource : resourceList) {
+            if (resource[0].equals(emergencyID)) {
+                return resource;
+            }
+        }
+
+        return null;
+    }
+
+    // Get currently available quantity
+    public static int getAvailable(String resourceType) {
+
+        int[] stock = stockData.get(resourceType);
+
+        if (stock == null) {
+            return 0;
+        }
+
+        return stock[1];
+    }
+
+    // Deduct allocated quantity from available stock
+    public static boolean allocateStock(
+            String resourceType, int quantity) {
+
+        int[] stock = stockData.get(resourceType);
+
+        if (stock == null || quantity <= 0
+                || quantity > stock[1]) {
+            return false;
+        }
+
+        stock[1] = stock[1] - quantity;
+
+        return true;
+    }
+
+    // Update total and available stock
+    public static void updateStock(
+            String resourceType, int total, int available) {
+
+        if (resourceType == null || total < 0
+                || available < 0 || available > total) {
+            return;
+        }
+
+        stockData.put(
+                resourceType,
+                new int[]{total, available});
+    }
+}
