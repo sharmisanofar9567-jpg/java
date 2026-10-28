@@ -1,3 +1,6 @@
+
+package src;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -6,13 +9,13 @@ public class Admindashboard {
     public static void main(String[] args) {
 
         JFrame frame = new JFrame("RESQ - Admin Dashboard");
+
         frame.setSize(750, 650);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout(10, 10));
 
         // Title
         JLabel title = new JLabel("Admin Dashboard", JLabel.CENTER);
-      
         frame.add(title, BorderLayout.NORTH);
 
         // Top Section
@@ -78,19 +81,14 @@ public class Admindashboard {
 
         // Emergency Records
         String[] columns = {
-            "ID",
-            "Reported By",
-            "Type",
-            "Location",
-            "Priority",
-            "Status"
+            "ID", "Reported By", "Type",
+            "Location", "Priority", "Status"
         };
 
         String[][] data = {
             {"E001", "Anu", "Medical", "Kollam", "High", "Pending"},
             {"E002", "Rahul", "Fire", "Kottarakkara", "High", "In Progress"},
-            {"E003", "Amal", "Accident", "Karunagappally",
-             "Medium", "Resolved"}
+            {"E003", "Amal", "Accident", "Karunagappally", "Medium", "Resolved"}
         };
 
         JTable table = new JTable(data, columns);
@@ -109,10 +107,7 @@ public class Admindashboard {
 
         // Resource Overview
         String[] resourceColumns = {
-            "Resource",
-            "Total",
-            "Assigned",
-            "Available"
+            "Resource", "Total", "Assigned", "Available"
         };
 
         String[][] resourceData = {
@@ -122,9 +117,7 @@ public class Admindashboard {
             {"Medical Team", "3", "1", "2"}
         };
 
-        JTable resourceTable =
-            new JTable(resourceData, resourceColumns);
-
+        JTable resourceTable = new JTable(resourceData, resourceColumns);
         resourceTable.setRowHeight(25);
 
         JPanel resourcePanel = new JPanel(new BorderLayout(5, 5));
@@ -133,17 +126,10 @@ public class Admindashboard {
             BorderFactory.createTitledBorder("Resource Overview")
         );
 
-        JScrollPane resourceScroll =
-            new JScrollPane(resourceTable);
+        JScrollPane resourceScroll = new JScrollPane(resourceTable);
+        resourceScroll.setPreferredSize(new Dimension(700, 130));
 
-        resourceScroll.setPreferredSize(
-            new Dimension(700, 130)
-        );
-
-        resourcePanel.add(
-            resourceScroll,
-            BorderLayout.CENTER
-        );
+        resourcePanel.add(resourceScroll, BorderLayout.CENTER);
 
         // Center Section
         JPanel centerPanel = new JPanel();
@@ -157,16 +143,12 @@ public class Admindashboard {
 
         centerPanel.add(topPanel);
         centerPanel.add(Box.createVerticalStrut(8));
-
         centerPanel.add(emergencyPanel);
         centerPanel.add(Box.createVerticalStrut(5));
-
         centerPanel.add(viewPanel);
         centerPanel.add(Box.createVerticalStrut(5));
-
         centerPanel.add(recordsPanel);
         centerPanel.add(Box.createVerticalStrut(8));
-
         centerPanel.add(resourcePanel);
 
         frame.add(centerPanel, BorderLayout.CENTER);
@@ -177,11 +159,10 @@ public class Admindashboard {
         );
 
         logoutPanel.add(new JButton("Logout"));
-        
-
         frame.add(logoutPanel, BorderLayout.SOUTH);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }
+
