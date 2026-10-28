@@ -1,32 +1,30 @@
-package RESQ;  // ✅ Must match folder name RESQ
+package src;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ResourceAllocation extends JFrame {
 
-    // Labels
-    JLabel emergencyLabel, resourceLabel, availableLabel, allocateLabel, priorityLabel, locationLabel;
-    // Text fields
-    JTextField emergencyField, availableField, allocateField, locationField;
-    // Combo boxes
+    JLabel emergencyLabel, resourceLabel, availableLabel;
+    JLabel allocateLabel, priorityLabel, locationLabel;
+
+    JTextField emergencyField, availableField;
+    JTextField allocateField, locationField;
+
     JComboBox<String> resourceBox, priorityBox;
-    // Buttons
     JButton allocateButton, clearButton;
 
     public ResourceAllocation() {
-        // Window setup
+
         setTitle("RESQ - Resource Allocation");
         setSize(500, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Main panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-        // ✅ Add padding around the panel (top, left, bottom, right)
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        mainPanel.setBorder(
+                BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // Form panel with GridLayout (rows × columns)
         JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
 
         // Emergency ID
@@ -35,12 +33,14 @@ public class ResourceAllocation extends JFrame {
 
         // Resource Type
         resourceLabel = new JLabel("Resource Type:");
-        resourceBox = new JComboBox<>(new String[]{"Police", "Fire Force", "Ambulance", "Medical Kit"});
+        resourceBox = new JComboBox<>(new String[]{
+            "Police", "Fire Force", "Ambulance", "Medical Kit"
+        });
 
         // Available Quantity
         availableLabel = new JLabel("Available Quantity:");
-        availableField = new JTextField("5");
-        availableField.setEditable(false); // cannot edit
+        availableField = new JTextField();
+        availableField.setEditable(false);
 
         // Allocate Quantity
         allocateLabel = new JLabel("Allocate Quantity:");
@@ -48,74 +48,167 @@ public class ResourceAllocation extends JFrame {
 
         // Priority
         priorityLabel = new JLabel("Priority:");
-        priorityBox = new JComboBox<>(new String[]{"Normal", "High", "Severe", "Extreme"});
+        priorityBox = new JComboBox<>(new String[]{
+            "Normal", "High", "Severe", "Extreme"
+        });
 
         // Location
         locationLabel = new JLabel("Location:");
         locationField = new JTextField("Kollam");
 
-        // Add all fields to form panel
-        formPanel.add(emergencyLabel); formPanel.add(emergencyField);
-        formPanel.add(resourceLabel); formPanel.add(resourceBox);
-        formPanel.add(availableLabel); formPanel.add(availableField);
-        formPanel.add(allocateLabel); formPanel.add(allocateField);
-        formPanel.add(priorityLabel); formPanel.add(priorityBox);
-        formPanel.add(locationLabel); formPanel.add(locationField);
+        formPanel.add(emergencyLabel);
+        formPanel.add(emergencyField);
+        formPanel.add(resourceLabel);
+        formPanel.add(resourceBox);
+        formPanel.add(availableLabel);
+        formPanel.add(availableField);
+        formPanel.add(allocateLabel);
+        formPanel.add(allocateField);
+        formPanel.add(priorityLabel);
+        formPanel.add(priorityBox);
+        formPanel.add(locationLabel);
+        formPanel.add(locationField);
 
-        // Buttons panel with FlowLayout
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        // Buttons
+        JPanel buttonPanel =
+                new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+
         allocateButton = new JButton("Allocate");
         clearButton = new JButton("Clear");
+
         buttonPanel.add(allocateButton);
         buttonPanel.add(clearButton);
 
-        // Add panels to main layout
         mainPanel.add(formPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        // Add main panel to frame
         add(mainPanel);
 
-        // ✅ Event Handling
+        // Show available stock
+        updateAvailableQuantity();
 
-        // Allocate button logic
-        allocateButton.addActionListener(e -> {
-            try {
-                int available = Integer.parseInt(availableField.getText());
-                int allocate = Integer.parseInt(allocateField.getText());
+        resourceBox.addActionListener(e -> updateAvailableQuantity());
 
-                if (allocate <= available && allocate > 0) {
-                    availableField.setText(String.valueOf(available - allocate));
-                    JOptionPane.showMessageDialog(this,
-                            "Resources allocated successfully!\n" +
-                            "Emergency ID: " + emergencyField.getText() +
-                            "\nResource: " + resourceBox.getSelectedItem() +
-                            "\nQuantity: " + allocate +
-                            "\nPriority: " + priorityBox.getSelectedItem() +
-                            "\nLocation: " + locationField.getText()
-                    );
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                            "Invalid allocation! Not enough resources available.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this,
-                        "Please enter a valid number for allocation.",
-                        "Input Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+        // Allocate button
+        allocateButton.addActionListener(e -> allocateResource());
 
-        // Clear button logic
+        // Clear button
         clearButton.addActionListener(e -> {
             emergencyField.setText("");
             allocateField.setText("");
             locationField.setText("");
             resourceBox.setSelectedIndex(0);
             priorityBox.setSelectedIndex(0);
-            availableField.setText("5"); // reset to default
-            JOptionPane.showMessageDialog(this, "Form cleared!");
+            updateAvailableQuantity();
         });
+    }
+
+    // Update available quantity
+    private void updateAvailableQuantity() {
+        String resource = resourceBox.getSelectedItem().toString();
+
+        availableField.setText(
+                String.valueOf(Resourcedata.getAvailable(resource)));
+    }
+
+    // Allocate resource
+    private void allocateResource() {
+
+        String id = emergencyField.getText();
+
+        if (id.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this, "Please enter Emergency ID.");
+            return;
+        }
+
+        Emergency emergency = Sharedata.findEmergency(id);
+
+        if (emergency == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Emergency ID not found!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Do not allocate to resolved incidents
+        if ("Resolved".equalsIgnoreCase(emergency.status)) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Resolved incidents cannot be allocated resources.",
+                    "Allocation Not Allowed",
+                    JOptionPane.WARNING_MESSAGE);
+            dispose();
+            return;
+        }
+
+        // Prevent duplicate allocation for the same incident
+        if (Resourcedata.findResource(id) != null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "A resource is already allocated to this incident.",
+                    "Allocation Not Allowed",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String resource = resourceBox.getSelectedItem().toString();
+
+        int quantity;
+
+        try {
+            quantity = Integer.parseInt(allocateField.getText());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter a valid number for allocation.",
+                    "Input Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int available = Resourcedata.getAvailable(resource);
+
+        if (quantity <= 0 || quantity > available) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Invalid quantity! Available quantity: " + available,
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Deduct from shared stock
+        boolean success = Resourcedata.allocateStock(resource, quantity);
+
+        if (!success) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Resource is not available in sufficient quantity.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            updateAvailableQuantity();
+            return;
+        }
+
+        // Save allocated resource
+        Resourcedata.addResource(id, resource, quantity);
+
+        // Update emergency status
+        emergency.status = "Resources Allocated";
+
+        updateAvailableQuantity();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Resources allocated successfully!\n"
+                + "Emergency ID: " + id
+                + "\nResource: " + resource
+                + "\nQuantity: " + quantity
+                + "\nPriority: " + priorityBox.getSelectedItem()
+                + "\nLocation: " + locationField.getText());
+
     }
 
     public static void main(String[] args) {
