@@ -6,163 +6,143 @@ import java.awt.*;
 
 public class Admindashboard {
 
-    public static void main(String[] args) {
+    JLabel totalLabel = new JLabel("5");
+    JLabel pendingLabel = new JLabel("2");
+    JLabel activeLabel = new JLabel("1");
+    JLabel resolvedLabel = new JLabel("2");
 
-        JFrame frame = new JFrame("RESQ - Admin Dashboard");
+    JPanel reportsPanel = new JPanel();
 
-        frame.setSize(750, 650);
+    Color blue = new Color(25, 100, 190);
+    Color lightBlue = new Color(235, 244, 255);
+
+    public Admindashboard() {
+
+        JFrame frame = new JFrame("RESCUE - Admin Dashboard");
+
+        frame.setSize(900, 800);
+        frame.setMinimumSize(new Dimension(700, 600));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout(10, 10));
-
-        // Title
-        JLabel title = new JLabel("Admin Dashboard", JLabel.CENTER);
-        frame.add(title, BorderLayout.NORTH);
-
-        // Top Section
-        JPanel topPanel = new JPanel(new FlowLayout());
-
-        topPanel.add(new JLabel("Area:"));
-
-        JComboBox<String> areaBox = new JComboBox<>(
-            new String[]{"Kollam", "Kochi", "Trivandrum"}
-        );
-        topPanel.add(areaBox);
-
-        topPanel.add(new JLabel("Date:"));
-
-        JTextField dateField = new JTextField(15);
-        topPanel.add(dateField);
-
-        JButton viewButton = new JButton("View Overview");
-        topPanel.add(viewButton);
-
-        // Emergency Overview
-        JPanel emergencyPanel = new JPanel(
-            new GridLayout(1, 4, 10, 10)
-        );
-
-        emergencyPanel.setBorder(
-            BorderFactory.createTitledBorder("Emergency Overview")
-        );
-
-        emergencyPanel.setPreferredSize(new Dimension(700, 70));
-
-        emergencyPanel.add(
-            new JLabel("Total Reported: 5", SwingConstants.CENTER)
-        );
-        emergencyPanel.add(
-            new JLabel("Pending: 2", SwingConstants.CENTER)
-        );
-        emergencyPanel.add(
-            new JLabel("In Progress: 1", SwingConstants.CENTER)
-        );
-        emergencyPanel.add(
-            new JLabel("Resolved: 2", SwingConstants.CENTER)
-        );
-
-        // View Emergencies
-        JPanel viewPanel = new JPanel(
-            new FlowLayout(FlowLayout.LEFT, 10, 5)
-        );
-
-        viewPanel.add(new JLabel("View Emergencies:"));
-
-        JComboBox<String> viewBox = new JComboBox<>(
-            new String[]{
-                "Current Emergencies",
-                "Pending",
-                "In Progress",
-                "Resolved",
-                "All Emergencies"
-            }
-        );
-
-        viewPanel.add(viewBox);
-
-        // Emergency Records
-        String[] columns = {
-            "ID", "Reported By", "Type",
-            "Location", "Priority", "Status"
-        };
-
-        String[][] data = {
-            {"E001", "Anu", "Medical", "Kollam", "High", "Pending"},
-            {"E002", "Rahul", "Fire", "Kottarakkara", "High", "In Progress"},
-            {"E003", "Amal", "Accident", "Karunagappally", "Medium", "Resolved"}
-        };
-
-        JTable table = new JTable(data, columns);
-        table.setRowHeight(25);
-
-        JPanel recordsPanel = new JPanel(new BorderLayout(5, 5));
-
-        recordsPanel.setBorder(
-            BorderFactory.createTitledBorder("Emergency Records")
-        );
-
-        JScrollPane tableScroll = new JScrollPane(table);
-        tableScroll.setPreferredSize(new Dimension(700, 130));
-
-        recordsPanel.add(tableScroll, BorderLayout.CENTER);
-
-        // Resource Overview
-        String[] resourceColumns = {
-            "Resource", "Total", "Assigned", "Available"
-        };
-
-        String[][] resourceData = {
-            {"Ambulance", "5", "2", "3"},
-            {"Fire Rescue", "3", "1", "2"},
-            {"Rescue Team", "4", "2", "2"},
-            {"Medical Team", "3", "1", "2"}
-        };
-
-        JTable resourceTable = new JTable(resourceData, resourceColumns);
-        resourceTable.setRowHeight(25);
-
-        JPanel resourcePanel = new JPanel(new BorderLayout(5, 5));
-
-        resourcePanel.setBorder(
-            BorderFactory.createTitledBorder("Resource Overview")
-        );
-
-        JScrollPane resourceScroll = new JScrollPane(resourceTable);
-        resourceScroll.setPreferredSize(new Dimension(700, 130));
-
-        resourcePanel.add(resourceScroll, BorderLayout.CENTER);
-
-        // Center Section
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(
-            new BoxLayout(centerPanel, BoxLayout.Y_AXIS)
-        );
-
-        centerPanel.setBorder(
-            BorderFactory.createEmptyBorder(5, 10, 5, 10)
-        );
-
-        centerPanel.add(topPanel);
-        centerPanel.add(Box.createVerticalStrut(8));
-        centerPanel.add(emergencyPanel);
-        centerPanel.add(Box.createVerticalStrut(5));
-        centerPanel.add(viewPanel);
-        centerPanel.add(Box.createVerticalStrut(5));
-        centerPanel.add(recordsPanel);
-        centerPanel.add(Box.createVerticalStrut(8));
-        centerPanel.add(resourcePanel);
-
-        frame.add(centerPanel, BorderLayout.CENTER);
-
-        // Logout
-        JPanel logoutPanel = new JPanel(
-            new FlowLayout(FlowLayout.RIGHT)
-        );
-
-        logoutPanel.add(new JButton("Logout"));
-        frame.add(logoutPanel, BorderLayout.SOUTH);
-
         frame.setLocationRelativeTo(null);
+        frame.setLayout(new BorderLayout());
+
+        // Main Panel
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 15));
+        mainPanel.setBackground(Color.WHITE);
+        mainPanel.setBorder(
+            BorderFactory.createEmptyBorder(15, 18, 15, 18)
+        );
+
+        // Header
+        JPanel header = new JPanel();
+        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+        header.setBackground(blue);
+        header.setBorder(
+            BorderFactory.createEmptyBorder(15, 20, 15, 20)
+        );
+
+        JLabel title = new JLabel("RESCUE");
+        title.setFont(new Font("Arial", Font.BOLD, 26));
+        title.setForeground(Color.WHITE);
+
+        JLabel subtitle = new JLabel("Admin Dashboard");
+        subtitle.setFont(new Font("Arial", Font.PLAIN, 16));
+        subtitle.setForeground(Color.WHITE);
+
+        header.add(title);
+        header.add(Box.createVerticalStrut(5));
+        header.add(subtitle);
+
+        mainPanel.add(header, BorderLayout.NORTH);
+
+        // Dashboard Content
+        JPanel content = new JPanel(new BorderLayout(10, 15));
+        content.setBackground(Color.WHITE);
+
+        // Count Cards
+        JPanel countPanel = new JPanel(new GridLayout(1, 4, 10, 10));
+        countPanel.setBackground(Color.WHITE);
+
+        countPanel.add(countBox("Total Reports", totalLabel));
+        countPanel.add(countBox("Pending", pendingLabel));
+        countPanel.add(countBox("Active", activeLabel));
+        countPanel.add(countBox("Resolved", resolvedLabel));
+
+        // Reports Section
+        JPanel reportsSection = new JPanel(new BorderLayout(5, 10));
+        reportsSection.setBackground(Color.WHITE);
+
+        JLabel reportsTitle = new JLabel("Emergency Reports");
+        reportsTitle.setFont(new Font("Arial", Font.BOLD, 18));
+
+        reportsSection.add(reportsTitle, BorderLayout.NORTH);
+
+        reportsPanel.setLayout(
+            new BoxLayout(reportsPanel, BoxLayout.Y_AXIS)
+        );
+        reportsPanel.setBackground(Color.WHITE);
+
+        JLabel message = new JLabel("Emergency reports will appear here.");
+        message.setBorder(
+            BorderFactory.createEmptyBorder(15, 10, 15, 10)
+        );
+        reportsPanel.add(message);
+
+        JScrollPane scrollPane = new JScrollPane(reportsPanel);
+        scrollPane.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
+        );
+
+        reportsSection.add(scrollPane, BorderLayout.CENTER);
+
+        // Quick Access Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        buttonPanel.setBackground(Color.WHITE);
+
+        JButton resourceButton = new JButton("Resource Management");
+        JButton historyButton = new JButton("Incident History");
+        JButton logoutButton = new JButton("Logout");
+
+        buttonPanel.add(resourceButton);
+        buttonPanel.add(historyButton);
+        buttonPanel.add(logoutButton);
+
+        JPanel centerPanel = new JPanel(new BorderLayout(10, 15));
+        centerPanel.setBackground(Color.WHITE);
+
+        centerPanel.add(countPanel, BorderLayout.NORTH);
+        centerPanel.add(reportsSection, BorderLayout.CENTER);
+        centerPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        content.add(centerPanel, BorderLayout.CENTER);
+
+        mainPanel.add(content, BorderLayout.CENTER);
+
+        frame.add(mainPanel);
         frame.setVisible(true);
     }
-}
 
+    JPanel countBox(String title, JLabel numberLabel) {
+
+        JPanel panel = new JPanel(new GridLayout(2, 1, 5, 5));
+        panel.setBackground(lightBlue);
+        panel.setBorder(
+            BorderFactory.createEmptyBorder(12, 10, 12, 10)
+        );
+
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        numberLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        numberLabel.setForeground(blue);
+
+        panel.add(titleLabel);
+        panel.add(numberLabel);
+
+        return panel;
+    }
+
+    public static void main(String[] args) {
+        new Admindashboard();
+    }
+}
