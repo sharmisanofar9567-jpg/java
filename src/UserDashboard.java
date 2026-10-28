@@ -5,108 +5,128 @@ import java.awt.*;
 
 public class UserDashboard extends JFrame {
 
-    Color blue = new Color(5, 61, 101);
-    Color background = new Color(242, 246, 249);
+    Color blue = new Color(40, 100, 160);
+    Color background = new Color(245, 247, 250);
 
     public UserDashboard() {
+
         setTitle("RESQ - User Dashboard");
-        setSize(750, 550);
+        setSize(650, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBackground(background);
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        JPanel header = new JPanel(new BorderLayout());
-        header.setBackground(blue);
-        header.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        mainPanel.setBorder(
+                BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
-        JLabel title = new JLabel("RESQ - Emergency Response System", SwingConstants.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 22));
-        title.setForeground(Color.WHITE);
-        header.add(title, BorderLayout.CENTER);
+        JLabel title = new JLabel("RESQ - Emergency Response System");
+        title.setFont(new Font("Arial", Font.BOLD, 23));
+        title.setForeground(new Color(35, 55, 75));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JPanel content = new JPanel();
-        content.setBackground(blue);
-        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        JLabel welcome = new JLabel("Welcome, User!", SwingConstants.CENTER);
+        JLabel welcome = new JLabel("Welcome, User!");
         welcome.setFont(new Font("Arial", Font.BOLD, 20));
-        welcome.setForeground(Color.WHITE);
+        welcome.setForeground(new Color(35, 55, 75));
         welcome.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel description = new JLabel("Your emergency assistance dashboard", SwingConstants.CENTER);
+        JLabel description = new JLabel("Manage your emergency reports");
         description.setFont(new Font("Arial", Font.PLAIN, 14));
-        description.setForeground(Color.WHITE);
+        description.setForeground(Color.DARK_GRAY);
         description.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        content.add(welcome);
-        content.add(Box.createVerticalStrut(8));
-        content.add(description);
-        content.add(Box.createVerticalStrut(20));
 
         JButton reportButton = new JButton("Report an Emergency");
         JButton reportsButton = new JButton("My Reports");
         JButton trackingButton = new JButton("Response Tracking");
+        JButton backButton = new JButton("Back to Login");
 
         styleButton(reportButton);
         styleButton(reportsButton);
         styleButton(trackingButton);
+        styleButton(backButton);
 
-        Dimension largeSize = new Dimension(500, 80);
-        reportButton.setPreferredSize(largeSize);
-        reportsButton.setPreferredSize(largeSize);
-        trackingButton.setPreferredSize(largeSize);
+        mainPanel.add(title);
+        mainPanel.add(Box.createVerticalStrut(35));
 
-        reportButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        reportsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        trackingButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mainPanel.add(welcome);
+        mainPanel.add(Box.createVerticalStrut(8));
 
-        content.add(reportButton);
-        content.add(Box.createVerticalStrut(15));
-        content.add(reportsButton);
-        content.add(Box.createVerticalStrut(15));
-        content.add(trackingButton);
-        content.add(Box.createVerticalStrut(20));
+        mainPanel.add(description);
+        mainPanel.add(Box.createVerticalStrut(30));
 
-        JLabel footer = new JLabel("Sample dashboard design - not connected to live service.", SwingConstants.CENTER);
-        footer.setFont(new Font("Arial", Font.PLAIN, 11));
-        footer.setForeground(Color.WHITE);
-        footer.setAlignmentX(Component.CENTER_ALIGNMENT);
-        content.add(footer);
+        mainPanel.add(reportButton);
+        mainPanel.add(Box.createVerticalStrut(15));
 
-        reportButton.addActionListener(e -> showMessage("Report an Emergency"));
-        reportsButton.addActionListener(e -> showMessage("My Reports"));
-        trackingButton.addActionListener(e -> showMessage("Response Tracking"));
+        mainPanel.add(reportsButton);
+        mainPanel.add(Box.createVerticalStrut(15));
 
-        mainPanel.add(header, BorderLayout.NORTH);
-        mainPanel.add(content, BorderLayout.CENTER);
+        mainPanel.add(trackingButton);
+        mainPanel.add(Box.createVerticalStrut(25));
+
+        mainPanel.add(backButton);
+
+        // Report an Emergency button
+        reportButton.addActionListener(e -> {
+            setVisible(false);
+            new EmergencyReportFrame();
+        });
+
+        // My Reports button
+        reportsButton.addActionListener(e -> {
+
+            if (Sharedata.emergencyList.isEmpty()) {
+
+                JOptionPane.showMessageDialog(
+                        this, "No emergency reports found.");
+
+            } else {
+
+                int lastIndex = Sharedata.emergencyList.size() - 1;
+
+                Emergency emergency =
+                        Sharedata.emergencyList.get(lastIndex);
+
+                setVisible(false);
+                new EmergencyDetailsFrame(emergency);
+            }
+        });
+
+        // Response Tracking button
+        trackingButton.addActionListener(e -> {
+            setVisible(false);
+            ResponseTrackingFrame.main(new String[0]);
+        });
+
+        // Back to Login button
+        backButton.addActionListener(e -> {
+            new LoginFrame().main(new String[0]);
+            dispose();
+        });
 
         setContentPane(mainPanel);
     }
 
     private void styleButton(JButton button) {
-        button.setFont(new Font("Arial", Font.PLAIN, 16));
-        button.setForeground(blue);
-        button.setBackground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220, 225, 230)),
-                BorderFactory.createEmptyBorder(12, 20, 12, 20)
-        ));
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    }
 
-    private void showMessage(String buttonName) {
-        JOptionPane.showMessageDialog(this,
-                buttonName + " button clicked.",
-                "RESQ",
-                JOptionPane.INFORMATION_MESSAGE);
+        button.setFont(new Font("Arial", Font.PLAIN, 15));
+        button.setForeground(Color.WHITE);
+        button.setBackground(blue);
+        button.setFocusPainted(false);
+
+        button.setBorder(
+                BorderFactory.createEmptyBorder(12, 20, 12, 20));
+
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setMaximumSize(new Dimension(260, 48));
+        button.setPreferredSize(new Dimension(260, 48));
+
+        button.setCursor(
+                Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new UserDashboard().setVisible(true));
+        new UserDashboard().setVisible(true);
     }
 }
