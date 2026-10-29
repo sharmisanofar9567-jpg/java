@@ -1,15 +1,16 @@
 package src;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 public class EmergencyReportFrame {
 
-    public static void main(String[] args) {
+    public EmergencyReportFrame() {
 
         JFrame frame = new JFrame("RESQ - Emergency Reporting");
-        frame.setSize(650, 500);
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // prevent auto-close
+        frame.setSize(600, 500);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -17,155 +18,202 @@ public class EmergencyReportFrame {
         gbc.anchor = GridBagConstraints.WEST;
 
         // Title
-        JPanel titlePanel = new JPanel();
         JLabel title = new JLabel("Emergency Reporting");
         title.setFont(new Font("Arial", Font.BOLD, 20));
-        titlePanel.add(title);
 
-        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        frame.add(titlePanel, gbc);
+        frame.add(title, gbc);
 
         // Emergency Type
-        JLabel typeLabel = new JLabel("Emergency Type:");
-        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 1;
+        gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.WEST;
-        frame.add(typeLabel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        frame.add(new JLabel("Emergency Type:"), gbc);
 
-        String[] types = {"Medical Emergency","Fire Incident","Road Accident","Natural Disaster","Crime","Other"};
+        String[] types = {
+            "Medical Emergency", "Fire Incident", "Road Accident",
+            "Natural Disaster", "Crime", "Other"
+        };
+
         JComboBox<String> typeBox = new JComboBox<>(types);
-        gbc.gridx = 1; gbc.gridy = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1;
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         frame.add(typeBox, gbc);
 
-        // Severity / Priority
-        JLabel priorityLabel = new JLabel("Severity / Priority:");
-        gbc.gridx = 0; gbc.gridy = 2;
-        frame.add(priorityLabel, gbc);
+        // Priority
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        frame.add(new JLabel("Severity / Priority:"), gbc);
 
-        String[] priorities = {"Critical","High","Medium","Low"};
+        String[] priorities = {"Critical", "High", "Medium", "Low"};
         JComboBox<String> priorityBox = new JComboBox<>(priorities);
-        gbc.gridx = 1; gbc.gridy = 2; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1;
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         frame.add(priorityBox, gbc);
 
-        // People Affected
-        JLabel peopleLabel = new JLabel("People Affected:");
-        gbc.gridx = 0; gbc.gridy = 3;
-        frame.add(peopleLabel, gbc);
+        // Location
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.NONE;
+        frame.add(new JLabel("Location:"), gbc);
 
-        JTextField peopleField = new JTextField();
-        gbc.gridx = 1; gbc.gridy = 3; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1;
+        JTextField locationField = new JTextField(20);
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        frame.add(locationField, gbc);
+
+        // People Affected
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.fill = GridBagConstraints.NONE;
+        frame.add(new JLabel("People Affected:"), gbc);
+
+        JTextField peopleField = new JTextField(20);
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         frame.add(peopleField, gbc);
 
         // Emergency Service
-        JLabel serviceLabel = new JLabel("Emergency Service:");
-        gbc.gridx = 0; gbc.gridy = 4;
-        frame.add(serviceLabel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.fill = GridBagConstraints.NONE;
+        frame.add(new JLabel("Emergency Service:"), gbc);
 
-        String[] services = {"Ambulance","Fire Force","Police","Rescue Team","Disaster Management"};
+        String[] services = {
+            "Ambulance", "Fire Force", "Police",
+            "Rescue Team", "Disaster Management"
+        };
+
         JComboBox<String> serviceBox = new JComboBox<>(services);
-        gbc.gridx = 1; gbc.gridy = 4; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1;
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         frame.add(serviceBox, gbc);
 
+        // Emergency Type Event
+        typeBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+
+                String type = (String) typeBox.getSelectedItem();
+
+                if ("Medical Emergency".equals(type)) {
+                    serviceBox.setSelectedItem("Ambulance");
+                } else if ("Fire Incident".equals(type)) {
+                    serviceBox.setSelectedItem("Fire Force");
+                }
+            }
+        });
+
         // Submit Button
-        JButton submitButton = new JButton("Submit Emergency Report");
-        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
+        JButton submitButton =
+                new JButton("Submit Emergency Report");
+
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.CENTER;
         frame.add(submitButton, gbc);
 
-        // ================= EVENT HANDLING =================
+        // Back Button
+        JButton backButton = new JButton("Back to Dashboard");
 
-        // Exit confirmation
+        gbc.gridy = 7;
+        frame.add(backButton, gbc);
+
+        // Submit Event
+        submitButton.addActionListener(e -> {
+
+            String location = locationField.getText().trim();
+            String peopleText = peopleField.getText().trim();
+
+            if (location.isEmpty()) {
+                JOptionPane.showMessageDialog(frame,
+                        "Please enter the location.");
+                return;
+            }
+
+            if (peopleText.isEmpty()) {
+                JOptionPane.showMessageDialog(frame,
+                        "Please enter people affected.");
+                return;
+            }
+
+            try {
+                int people = Integer.parseInt(peopleText);
+
+                if (people <= 0) {
+                    JOptionPane.showMessageDialog(frame,
+                            "People affected must be greater than zero.");
+                    return;
+                }
+
+                // Generate Emergency ID
+                String id = Sharedata.generateID();
+
+                // Create Emergency Object
+                Emergency emergency = new Emergency(
+                        id,
+                        (String) typeBox.getSelectedItem(),
+                        (String) priorityBox.getSelectedItem(),
+                        location,
+                        people,
+                        (String) serviceBox.getSelectedItem(),
+                        "user"
+                );
+
+                // Save Report
+                Sharedata.addEmergency(emergency);
+
+                // Open Emergency Details
+                frame.dispose();
+                new EmergencyDetailsFrame(emergency);
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame,
+                        "Please enter a valid number of people.");
+            }
+        });
+
+        // Back Event
+     // Back Event
+        backButton.addActionListener(e -> {
+            frame.dispose();
+            new UserDashboard().setVisible(true);
+        });
+
+        // Exit Confirmation
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+
                 int choice = JOptionPane.showConfirmDialog(
                         frame,
                         "Are you sure you want to exit?",
                         "Confirm Exit",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE
+                        JOptionPane.YES_NO_OPTION
                 );
+
                 if (choice == JOptionPane.YES_OPTION) {
                     frame.dispose();
                 }
             }
         });
 
-        // ItemListener for Emergency Type
-        typeBox.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                String selectedType = (String) typeBox.getSelectedItem();
-                if ("Medical Emergency".equals(selectedType)) {
-                    serviceBox.setSelectedItem("Ambulance");
-                } else if ("Fire Incident".equals(selectedType)) {
-                    serviceBox.setSelectedItem("Fire Force");
-                }
-            }
-        });
-
-        // ItemListener for Priority
-        priorityBox.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                String selectedPriority = (String) priorityBox.getSelectedItem();
-                if ("Critical".equals(selectedPriority)) {
-                    JOptionPane.showMessageDialog(frame,
-                            "⚠ Critical Priority! Immediate action required.",
-                            "Warning",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-            }
-        });
-
-        // ServiceBox listener (optional handling)
-        serviceBox.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                String selectedService = (String) serviceBox.getSelectedItem();
-                JOptionPane.showMessageDialog(frame,
-                        "Service selected: " + selectedService,
-                        "Info",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-
-        // Submit button validation + report
-        submitButton.addActionListener(e -> {
-            String type = (String) typeBox.getSelectedItem();
-            String priority = (String) priorityBox.getSelectedItem();
-            String service = (String) serviceBox.getSelectedItem();
-            String peopleText = peopleField.getText().trim();
-
-            // Validation
-            if (peopleText.isEmpty()) {
-                JOptionPane.showMessageDialog(frame,
-                        "Please enter number of people affected.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            try {
-                int people = Integer.parseInt(peopleText);
-                if (people < 0) throw new NumberFormatException();
-
-                // Success message
-                JOptionPane.showMessageDialog(frame,
-                        "Report Submitted Successfully!\n\n" +
-                        "Type: " + type + "\n" +
-                        "Priority: " + priority + "\n" +
-                        "People Affected: " + people + "\n" +
-                        "Service: " + service,
-                        "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
-
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(frame,
-                        "Invalid number for People Affected.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
-        // Show Frame
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-}
 
+    public static void main(String[] args) {
+        new EmergencyReportFrame();
+    }
+}
