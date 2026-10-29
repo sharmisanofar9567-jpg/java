@@ -1,79 +1,108 @@
 package src;
+
 import java.awt.*;
 import javax.swing.*;
 
 public class EmergencyDetailsFrame {
 
-    public static void main(String[] args) {
+    public EmergencyDetailsFrame(Emergency emergency) {
 
         JFrame frame = new JFrame("RESQ - Emergency Details");
+        frame.setSize(550, 450);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLayout(new GridBagLayout());
 
-        frame.setSize(600, 450);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.setLayout(new GridLayout(7, 2, 10, 10));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(12, 15, 12, 15);
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Title
         JLabel title = new JLabel("Emergency Details");
+        title.setFont(new Font("Arial", Font.BOLD, 22));
 
-        frame.add(title);
-        frame.add(new JLabel(""));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        frame.add(title, gbc);
+
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST;
 
         // Emergency ID
-        JLabel idLabel = new JLabel("Emergency ID:");
-        JLabel idValue = new JLabel("ER001");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        frame.add(new JLabel("Emergency ID:"), gbc);
 
-        frame.add(idLabel);
-        frame.add(idValue);
+        gbc.gridx = 1;
+        frame.add(new JLabel(emergency.emergencyID), gbc);
 
         // Emergency Type
-        JLabel typeLabel = new JLabel("Emergency Type:");
-        JLabel typeValue = new JLabel("Fire Incident");
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        frame.add(new JLabel("Emergency Type:"), gbc);
 
-        frame.add(typeLabel);
-        frame.add(typeValue);
+        gbc.gridx = 1;
+        frame.add(new JLabel(emergency.emergencyType), gbc);
 
-        // Severity / Priority
-        JLabel priorityLabel =
-                new JLabel("Severity / Priority:");
+        // Priority
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        frame.add(new JLabel("Severity / Priority:"), gbc);
 
-        JLabel priorityValue =
-                new JLabel("Critical");
+        gbc.gridx = 1;
+        frame.add(new JLabel(emergency.priority), gbc);
 
-        frame.add(priorityLabel);
-        frame.add(priorityValue);
+        // Location
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        frame.add(new JLabel("Location:"), gbc);
+
+        gbc.gridx = 1;
+        frame.add(new JLabel(emergency.location), gbc);
 
         // People Affected
-        JLabel peopleLabel =
-                new JLabel("People Affected:");
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        frame.add(new JLabel("People Affected:"), gbc);
 
-        JLabel peopleValue =
-                new JLabel("5");
-
-        frame.add(peopleLabel);
-        frame.add(peopleValue);
-
-        // Photo / Evidence
-        JLabel photoLabel =
-                new JLabel("Photo / Evidence:");
-
-        JLabel photoValue =
-                new JLabel("fire.jpg");
-
-        frame.add(photoLabel);
-        frame.add(photoValue);
+        gbc.gridx = 1;
+        frame.add(new JLabel(
+                String.valueOf(emergency.peopleAffected)), gbc);
 
         // Emergency Service
-        JLabel serviceLabel =
-                new JLabel("Emergency Service:");
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        frame.add(new JLabel("Emergency Service:"), gbc);
 
-        JLabel serviceValue =
-                new JLabel("Fire Force");
+        gbc.gridx = 1;
+        frame.add(new JLabel(emergency.emergencyService), gbc);
 
-        frame.add(serviceLabel);
-        frame.add(serviceValue);
+        // Status
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        frame.add(new JLabel("Status:"), gbc);
 
-        // Show Frame
+        gbc.gridx = 1;
+        frame.add(new JLabel(emergency.status), gbc);
+
+        // Back Button
+        JButton backButton = new JButton("Back");
+
+        gbc.gridx = 0;
+        gbc.gridy = 8;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
+        frame.add(backButton, gbc);
+
+        backButton.addActionListener(e -> {
+            frame.dispose();
+            new UserDashboard().setVisible(true);
+        });
+
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }
